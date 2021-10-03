@@ -45,6 +45,16 @@ export default class ExperienceDetail extends React.Component {
     }));
   };
 
+  editPrice = () => {
+    var change = prompt("Enter your edit here");
+    var changedExp = this.state.experience;
+    changedExp.price = change;
+    alert(this.state.experience.price);
+    this.setState({
+      experience: changedExp
+    });
+  };
+
   websiteURLChecker = (url) => {
     if (!url.includes("http://") && !url.includes("https://")) {
       if (!url.includes("www.")) {
@@ -244,6 +254,9 @@ export default class ExperienceDetail extends React.Component {
                       {" "}
                       ${this.state.experience.price}{" "}
                     </span>
+                    <span style={{ marginLeft: "1rem" }}>
+                      <button id="btn-edit" onClick={this.editPrice}>Edit</button>
+                    </span>
                   </div>
 
                   <div className="d-flex pt-4 ">
@@ -322,7 +335,7 @@ export default class ExperienceDetail extends React.Component {
               <h2> Expectations </h2>
             </div>
             <div className="row offset-1 pt-2">
-              <h3> What I Can Offer </h3>
+              <h3> What I Can Offer to you rmother </h3>
             </div>
 
             <div className="row offset-1 pt-0 pl-3 pr-3">
