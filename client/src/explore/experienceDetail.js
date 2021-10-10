@@ -181,26 +181,46 @@ export default class ExperienceDetail extends React.Component {
                 style={{ height: "65%", width: "100%" }}
               >
                 <div style={{ padding: "5rem" }}>
-                  <div className="d-flex pt-4">
-                    <h1
-                      style={{
-                        width: "100%",
-                        paddingTop: "2rem",
-                        paddingRight: "1.5rem",
-                        fontFamily: "Mplus 1p",
-                        fontSize: "1.5rem",
-                        fontStyle: "normal",
-                        fontWeight: "500",
-                        lineHeight: "2rem",
-                        letterSpacing: "4px",
-                        textAlign: "left",
-                      }}
-                    >
-                      {this.state.experience.title
-                        ? this.state.experience.title
-                        : ""}
-                    </h1>
-                    {<img src={Star} style={{ height: "2rem" }} />}
+                  <div className="outer">
+                    <div className="top">
+                      <span
+                            className="d-flex pt-2"
+                            onClick={this.enableEdit}
+                            onMouseOver={this.changeTextColor}
+                            style={{
+                              fontFamily: "Poppins",
+                              fontStyle: "normal",
+                              fontWeight: "normal",
+                              fontSize: "24px",
+                              lineHeight: "36px",
+                              letterSpacing: "0.01em",
+                              color: "#FFFFFF",
+                              cursor: "pointer"
+                            }}
+                          >
+                            Edit
+                      </span> 
+                    </div>
+                    <div className="d-flex pt-4 below">
+                      <h1
+                        style={{
+                          width: "100%",
+                          paddingTop: "2rem",
+                          paddingRight: "1.5rem",
+                          fontFamily: "Mplus 1p",
+                          fontSize: "1.5rem",
+                          fontStyle: "normal",
+                          fontWeight: "500",
+                          lineHeight: "2rem",
+                          letterSpacing: "4px",
+                          textAlign: "left"
+                        }}
+                      >
+                        {this.state.experience.title
+                          ? this.state.experience.title
+                          : ""}
+                      </h1>
+                      {<img src={Star} style={{ height: "2rem" }} />}
                   </div>
 
                   <div
