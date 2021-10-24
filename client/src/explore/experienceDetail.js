@@ -40,20 +40,63 @@ export default class ExperienceDetail extends React.Component {
     }
   }
   enableEdit = () => {
-    this.setState((prevState) => ({
-      editDisabled: !prevState.editDisabled,
-    }));
+    alert("You are currently in edit mode, select fields you want to change, edit them, then click Save. If you change your mind, click Cancel to revert to original");
+    this.setEditMode(true);
   };
 
-  editPrice = () => {
-    var change = prompt("Enter your edit here");
+  saveDetails = (detail) => {
+    // check for data legality before changing in database
+    if(!this.dataValidation()) return;
+    
     var changedExp = this.state.experience;
-    changedExp.price = change;
-    alert(this.state.experience.price);
-    this.setState({
-      experience: changedExp
-    });
-  };
+    changedExp.title = document.getElementById("title").textContent;
+    var toCheck = ["hours", "days", "price"]
+
+    if (!!document.getElementById("hours")) {
+      changedExp.durationHours = parseInt(document.getElementById("hours").textContent);
+    }
+    if (!!document.getElementById("days")) {
+      changedExp.days = parseInt(document.getElementById("days").textContent);
+    }
+    if (!!document.getElementById("price")) {
+      changedExp.price = parseInt(document.getElementById("price").textContent);
+    }
+
+    this.setEditMode(false);
+    this.setState({ experience: changedExp });
+  }
+
+  setEditMode = (mode) => {
+    var editable = document.getElementsByClassName("editable");
+    for (let edit of editable) {
+      edit.contentEditable = mode;
+    }
+    document.getElementById("btn-save").hidden = !mode;
+    document.getElementById("btn-cancel-changes").hidden = !mode;
+  }
+
+  dataValidation = () => {
+    var toCheck = ["hours", "days", "price"]
+    for (var id  of toCheck) {
+      var content = document.getElementById(id);
+      if(!!content && (isNaN(content.textContent) || parseInt(content.textContent) < 0)) {
+        alert(`Illegal input for ${id}, please double check.`);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  cancelChanges = () => {
+    this.setState({ experience: this.state.experience });
+
+    alert("All changes have been cancelled.");
+    this.setEditMode(false);
+  }
+
+  changeTextColor = (e) => {
+    e.target.style.textColor = "red";
+  }
 
   websiteURLChecker = (url) => {
     if (!url.includes("http://") && !url.includes("https://")) {
@@ -182,27 +225,38 @@ export default class ExperienceDetail extends React.Component {
               >
                 <div style={{ padding: "5rem" }}>
                   <div className="outer">
-                    <div className="top">
-                      <span
-                            className="d-flex pt-2"
-                            onClick={this.enableEdit}
-                            onMouseOver={this.changeTextColor}
+                    <div
+                        style={{
+                          height: "1rem",
+                          zIndex: 99999
+                        }}
+                      >
+                        <span
+                          className="d-flex pt-2"
+                          onClick={this.enableEdit}
+                          onMouseOver={this.changeTextColor}
+                          style={{
+                            fontFamily: "Poppins",
+                            fontStyle: "normal",
+                            fontWeight: "normal",
+                            fontSize: "24px",
+                            lineHeight: "36px",
+                            letterSpacing: "0.01em",
+                            color: "#FFFFFF"
+                          }}
+                        >
+                          <div
                             style={{
-                              fontFamily: "Poppins",
-                              fontStyle: "normal",
-                              fontWeight: "normal",
-                              fontSize: "24px",
-                              lineHeight: "36px",
-                              letterSpacing: "0.01em",
-                              color: "#FFFFFF",
                               cursor: "pointer"
-                            }}
-                          >
+                            }}>
                             Edit
-                      </span> 
+                          </div>
+                        </span> 
                     </div>
                     <div className="d-flex pt-4 below">
                       <h1
+                        className="editable"
+                        id="title"
                         style={{
                           width: "100%",
                           paddingTop: "2rem",
@@ -213,16 +267,16 @@ export default class ExperienceDetail extends React.Component {
                           fontWeight: "500",
                           lineHeight: "2rem",
                           letterSpacing: "4px",
-                          textAlign: "left"
+                          textAlign: "left",
                         }}
                       >
                         {this.state.experience.title
                           ? this.state.experience.title
-                          : ""}
+                          : "(To be updated)"}
                       </h1>
                       {<img src={Star} style={{ height: "2rem" }} />}
+                    </div>
                   </div>
-
                   <div
                     className="d-flex pt-2"
                     style={{
@@ -235,13 +289,15 @@ export default class ExperienceDetail extends React.Component {
                       textAlign: "left",
                     }}
                   >
-                    {this.state.experience.remote
-                      ? "Remote"
-                      : " " +
-                        host.company.city +
-                        (host.company.state !== "" && host.company.state
-                          ? ", " + host.company.state
-                          : null)}
+                    <span /*className="editable" TODO: Add support for city and state*/>
+                      {this.state.experience.remote
+                        ? "Remote"
+                        : " " +
+                          host.company.city +
+                          (host.company.state !== "" && host.company.state
+                            ? ", " + host.company.state
+                            : null)}
+                    </span>
                   </div>
                   <div
                     className="d-flex pt-1 "
@@ -255,27 +311,38 @@ export default class ExperienceDetail extends React.Component {
                       textAlign: "left",
                     }}
                   >
-                    {console.log(this.state.experience.durationDays)}
-                    {this.state.experience.durationDays != undefined ? (
-                      this.state.experience.durationDays > 1 ? (
-                        <span> {this.state.experience.durationDays} days </span>
-                      ) : (
-                        <span> {this.state.experience.durationDays} day </span>
-                      )
-                    ) : null}
-                    {this.state.experience.durationHours != undefined ? (
-                      this.state.experience.durationHours === 1 ? (
-                        <span>{this.state.experience.durationHours} hour</span>
-                      ) : (
-                        <span>{this.state.experience.durationHours} hours</span>
-                      )
-                    ) : null}
+                      {console.log(this.state.experience.durationDays)}
+                      {this.state.experience.durationDays != undefined ? (
+                        this.state.experience.durationDays > 1 ? (
+                          <div>
+                            <span id="days" className="editable">{this.state.experience.durationDays}</span> days
+                          </div>
+                        ) : (
+                          <div>
+                            <span id="days" className="editable">{this.state.experience.durationDays}</span> day
+                          </div>
+                        )
+                      ) : null}
+                      {this.state.experience.durationHours != undefined ? (
+                        this.state.experience.durationHours === 1 ? (
+                          <div>
+                            <span id="hours" className="editable">{this.state.experience.durationHours}</span> hour
+                          </div>
+                        ) : (
+                          <div>
+                            <span id="hours" className="editable">{this.state.experience.durationHours}</span> hours
+                          </div>
+                        )
+                      ) : null}
                     <span style={{ marginLeft: "2rem" }}>
                       {" "}
-                      ${this.state.experience.price}{" "}
+                      $<span id="price" className="editable">{this.state.experience.price}</span>{" "}
                     </span>
                     <span style={{ marginLeft: "1rem" }}>
-                      <button id="btn-edit" onClick={this.editPrice}>Edit</button>
+                      <button id="btn-save" onClick={this.saveDetails} hidden="true">Save</button>
+                    </span>
+                    <span style={{ marginLeft: "1rem" }}>
+                      <button id="btn-cancel-changes" onClick={this.cancelChanges} hidden="true">Cancel</button>
                     </span>
                   </div>
 
@@ -355,7 +422,7 @@ export default class ExperienceDetail extends React.Component {
               <h2> Expectations </h2>
             </div>
             <div className="row offset-1 pt-2">
-              <h3> What I Can Offer to you rmother </h3>
+              <h3> What I Can Offer </h3>
             </div>
 
             <div className="row offset-1 pt-0 pl-3 pr-3">

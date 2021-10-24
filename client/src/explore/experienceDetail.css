@@ -125,8 +125,24 @@
   color: #fcfcfc;
 }
 
-#btn-edit {
+#btn-save {
+  background: #f2c94c;
+	width: 50px;
+  height: 50px;
+}
+
+#btn-cancel-changes {
   background: rgba(255, 255, 255, 0.31);
 	width: 50px;
   height: 50px;
+}
+
+.outer {
+  display: grid;
+  grid-template: 1fr / 1fr;
+  place-items: left;
+}
+.outer > * {
+  grid-column: 1 / 1;
+  grid-row: 1 / 1;
 }
