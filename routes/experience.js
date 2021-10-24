@@ -64,7 +64,7 @@ router.put("/:id", function (req, res, next) {
   Experience.findByIdAndUpdate({ _id: req.params.id }, req.body).then(
     function () {
       //find and send back updated application for display
-      Experience.findOne({ _id: req.params.id }, req.body).then(function (
+      Experience.findOne({ _id: req.params.id }).then(function (
         experience
       ) {
         res.send(experience);
