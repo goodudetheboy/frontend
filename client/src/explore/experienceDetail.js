@@ -50,7 +50,6 @@ export default class ExperienceDetail extends React.Component {
     
     var changedExp = this.state.experience;
     changedExp.title = document.getElementById("title").textContent;
-    var toCheck = ["hours", "days", "price"]
 
     if (!!document.getElementById("hours")) {
       changedExp.durationHours = parseInt(document.getElementById("hours").textContent);
@@ -64,6 +63,16 @@ export default class ExperienceDetail extends React.Component {
 
     this.setEditMode(false);
     this.setState({ experience: changedExp });
+
+    let expId = this.props.customLinkExpID
+    ? this.props.customLinkExpID
+    : this.props.match.params.id;
+
+    // TODO: the editExperience does not work, need fixing
+    APIExperience.editExperience(expId, changedExp)
+    .then(() => {
+      alert("Succesfully changed details");
+    });
   }
 
   setEditMode = (mode) => {
@@ -88,6 +97,7 @@ export default class ExperienceDetail extends React.Component {
   }
 
   cancelChanges = () => {
+    // TODO: This is not working :( because React does not give a fuck about resetting with original values
     this.setState({ experience: this.state.experience });
 
     alert("All changes have been cancelled.");
